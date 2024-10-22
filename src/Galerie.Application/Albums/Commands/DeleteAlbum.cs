@@ -1,4 +1,4 @@
-namespace Galerie.Application.Albums.Delete;
+namespace Galerie.Application.Albums.Commands;
 
 public record DeleteAlbumCommand(Guid Id) : IRequest;
 

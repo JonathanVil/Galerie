@@ -1,4 +1,4 @@
-namespace Galerie.Application.Albums.Create;
+namespace Galerie.Application.Albums.Commands;
 
 public record CreateAlbumCommand(string Title) : IRequest<Guid>;
 
