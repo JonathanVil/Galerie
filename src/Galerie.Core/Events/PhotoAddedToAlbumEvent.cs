@@ -1,5 +1,7 @@
-using Galerie.Core.Common;
-
 namespace Galerie.Core.Events;
 
-public class PhotoAddedToAlbumEvent : EventBase;
+public class PhotoAddedToAlbumEvent(Photo photo, Album album) : EventBase
+{
+    public Photo Photo { get; } = photo;
+    public Album Album { get; } = album;
+}

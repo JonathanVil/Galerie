@@ -1,3 +1,6 @@
 namespace Galerie.Core.Events;
 
-public class AlbumDeletedEvent : EventBase;
+public class AlbumDeletedEvent(Album album) : EventBase
+{
+    public Album Album { get; } = album;
+}
