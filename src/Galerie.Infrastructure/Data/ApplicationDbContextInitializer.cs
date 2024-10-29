@@ -16,7 +16,7 @@ public static class InitializerExtensions
 
         var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
 
-        await initializer.InitialiseAsync();
+        await initializer.InitializeAsync();
 
         await initializer.SeedAsync();
     }
@@ -37,7 +37,7 @@ public class ApplicationDbContextInitializer
         _roleManager = roleManager;
     }
 
-    public async Task InitialiseAsync()
+    public async Task InitializeAsync()
     {
         try
         {

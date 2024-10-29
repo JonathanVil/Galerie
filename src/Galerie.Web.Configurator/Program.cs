@@ -21,7 +21,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // await app.InitializeDatabaseAsync();
+    await app.InitializeDatabaseAsync();
 }
 else
 {
@@ -32,6 +32,8 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAntiforgery();
 
