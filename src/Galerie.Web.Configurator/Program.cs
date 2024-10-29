@@ -1,5 +1,6 @@
 using Galerie.Application;
 using Galerie.Infrastructure;
+using Galerie.Infrastructure.Data;
 using Galerie.Web.Configurator;
 using Galerie.Web.Configurator.Components;
 
@@ -18,7 +19,11 @@ builder.Services.AddWebServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    // await app.InitializeDatabaseAsync();
+}
+else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -35,3 +40,5 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+Console.WriteLine("HELLO");

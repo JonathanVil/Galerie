@@ -32,7 +32,7 @@ public static class DependencyInjection
 
         services.AddScoped<ApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-        // services.AddScoped<ApplicationDbContextInitialiser>();
+        services.AddScoped<ApplicationDbContextInitializer>();
 
         services.AddAuthentication()
             .AddBearerToken(IdentityConstants.BearerScheme);
@@ -42,8 +42,7 @@ public static class DependencyInjection
         services
             .AddIdentityCore<ApplicationUser>()
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddApiEndpoints();
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddSingleton(TimeProvider.System);
         services.AddTransient<IIdentityService, IdentityService>();
