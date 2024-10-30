@@ -1,6 +1,10 @@
+using Ardalis.GuardClauses;
+using Galerie.Application.Common.Interfaces;
+using Galerie.Core.Entities;
+
 namespace Galerie.Application.Albums.Commands;
 
-public record CreateAlbumCommand(string Title) : IRequest<Guid>;
+public record CreateAlbumCommand(string Title, string? Description) : IRequest<Guid>;
 
 public class CreateAlbumCommandValidator : AbstractValidator<CreateAlbumCommand>
 {
@@ -14,8 +18,26 @@ public class CreateAlbumCommandValidator : AbstractValidator<CreateAlbumCommand>
 
 public class CreateAlbumCommandHandler : IRequestHandler<CreateAlbumCommand, Guid>
 {
-    public Task<Guid> Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
+    private readonly IApplicationDbContext _context;
+    private readonly Guid _userId;
+
+    public CreateAlbumCommandHandler(IApplicationDbContext context, IUser user)
     {
-        throw new NotImplementedException();
+        _context = context;
+        _userId = Guard.Against.Null(user.Id);
+    }
+
+    public async Task<Guid> Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
+    {
+        var entity = new Album(_userId, request.Title)
+        {
+            Description = request.Description
+        };
+
+        _context.Albums.Add(entity);
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return entity.Id;
     }
 }
