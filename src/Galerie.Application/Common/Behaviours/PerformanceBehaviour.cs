@@ -44,7 +44,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
                 userName = await _identityService.GetUserNameAsync(userId.Value);
             }
 
-            _logger.LogWarning("JasonCleanTemplate Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
+            _logger.LogWarning("Galerie Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
                 requestName, elapsedMilliseconds, userId, userName, request);
         }
 
