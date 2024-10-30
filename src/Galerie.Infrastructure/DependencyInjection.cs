@@ -30,6 +30,8 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString);
         });
         
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        
         services.AddScoped<ApplicationDbContextInitializer>();
 
         return services;
