@@ -14,5 +14,9 @@ public class AlbumConfiguration : IEntityTypeConfiguration<Album>
 
         builder.Property(a => a.Description)
             .HasMaxLength(500);
+
+        builder.HasOne<Photo>(a => a.CoverPhoto);
+
+        builder.HasMany(a => a.Photos);
     }
 }

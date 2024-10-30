@@ -18,5 +18,7 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 
         builder.Property(p => p.Description)
             .HasMaxLength(500);
+
+        builder.HasMany(p => p.Albums);
     }
 }
