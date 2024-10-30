@@ -3,7 +3,6 @@
 @using Ardalis.GuardClauses
 @using Galerie.Application.Albums.Queries.GetAlbum
 @using Galerie.Application.Albums.Queries.GetUserAlbums
-@using Galerie.Application.Common.Interfaces
 @using MediatR
 @using Microsoft.AspNetCore.Authorization
 
@@ -43,7 +42,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(TimeSpan.FromSeconds(1));
         var result = await Sender.Send(new GetMyAlbumsQuery());
         _albums = Guard.Against.Null(result);
     }
