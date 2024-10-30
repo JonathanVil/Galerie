@@ -1,19 +1,19 @@
 namespace Galerie.Application.Albums.Queries.GetAlbum;
 
-public record GetAlbumCommand(Guid AlbumId) : IRequest<AlbumDto>;
+public record GetAlbumQuery(Guid AlbumId) : IRequest<AlbumDto>;
 
-public class GetAlbumCommandValidator : AbstractValidator<GetAlbumCommand>
+public class GetAlbumQueryValidator : AbstractValidator<GetAlbumQuery>
 {
-    public GetAlbumCommandValidator()
+    public GetAlbumQueryValidator()
     {
         RuleFor(v => v.AlbumId)
             .NotEmpty();
     }
 }
 
-public class GetAlbumCommandHandler : IRequestHandler<GetAlbumCommand, AlbumDto>
+public class GetAlbumQueryHandler : IRequestHandler<GetAlbumQuery, AlbumDto>
 {
-    public async Task<AlbumDto> Handle(GetAlbumCommand request, CancellationToken cancellationToken)
+    public async Task<AlbumDto> Handle(GetAlbumQuery request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
