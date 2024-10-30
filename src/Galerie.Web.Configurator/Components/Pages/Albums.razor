@@ -15,23 +15,35 @@
 
 <h1>Albums</h1>
 
-@foreach (var album in _albums)
+@if (_albums == null)
 {
-    <p>Title: @album.Title</p>
-    <p>Description: @album.Description</p>
-    <p>Cover URL: @album.CoverUrl</p>
-    <p>Photos #: @album.NumberOfPhotos</p>
-    <p>Created: @album.Created</p>
-    <p>Last modified: @album.LastModified</p>
+    <Spinner/>
+}
+else if (_albums.Any())
+{
+    @foreach (var album in _albums)
+    {
+        <p>Title: @album.Title</p>
+        <p>Description: @album.Description</p>
+        <p>Cover URL: @album.CoverUrl</p>
+        <p>Photos #: @album.NumberOfPhotos</p>
+        <p>Created: @album.Created</p>
+        <p>Last modified: @album.LastModified</p>
+    }
+}
+else
+{
+    <p>No albums found.</p>
 }
 
 
 @code {
 
-    private IReadOnlyCollection<AlbumDto> _albums;
+    private IReadOnlyCollection<AlbumDto>? _albums;
 
     protected override async Task OnInitializedAsync()
     {
+        await Task.Delay(TimeSpan.FromSeconds(1));
         var result = await Sender.Send(new GetMyAlbumsQuery());
         _albums = Guard.Against.Null(result);
     }
