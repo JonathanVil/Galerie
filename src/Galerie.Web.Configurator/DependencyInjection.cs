@@ -10,12 +10,18 @@ namespace Galerie.Web.Configurator;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddWebServices(this IServiceCollection services)
+    public static IServiceCollection AddWebServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddAuthentication(o =>
             {
                 o.DefaultScheme = IdentityConstants.ApplicationScheme;
                 o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddGoogle(options =>
+            {
+                var googleAuthNSection = config.GetSection("Authentication:Google");
+                options.ClientId = googleAuthNSection["ClientId"] ?? throw new InvalidOperationException("Google auth configuration is invalid");
+                options.ClientSecret = googleAuthNSection["ClientSecret"] ?? throw new InvalidOperationException("Google auth configuration is invalid");
             })
             .AddIdentityCookies();
         
