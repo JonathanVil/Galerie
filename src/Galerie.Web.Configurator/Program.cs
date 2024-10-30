@@ -3,6 +3,8 @@ using Galerie.Infrastructure;
 using Galerie.Infrastructure.Data;
 using Galerie.Web.Configurator;
 using Galerie.Web.Configurator.Components;
+using Galerie.Web.Configurator.Components.Account;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 // builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
+
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<IdentityUserAccessor>();
+builder.Services.AddScoped<IdentityRedirectManager>();
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -32,8 +39,6 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseAntiforgery();
 
@@ -41,6 +46,7 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.Run();
+// Add additional endpoints required by the Identity /Account Razor components.
+app.MapAdditionalIdentityEndpoints();
 
-Console.WriteLine("HELLO");
+app.Run();

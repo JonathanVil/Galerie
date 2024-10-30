@@ -2,10 +2,9 @@
 using Galerie.Core.Constants;
 using Galerie.Infrastructure.Data;
 using Galerie.Infrastructure.Identity;
+using Galerie.Web.Configurator.Components.Account;
 using Galerie.Web.Configurator.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Galerie.Web.Configurator;
 
@@ -20,12 +19,13 @@ public static class DependencyInjection
             })
             .AddIdentityCookies();
         
-        services
-            .AddIdentityCore<ApplicationUser>()
+        services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultUI()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddSignInManager();
+        
+        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
         services.AddSingleton(TimeProvider.System);
         services.AddTransient<IIdentityService, IdentityService>();
