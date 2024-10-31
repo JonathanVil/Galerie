@@ -1,0 +1,36 @@
+@page "/Albums/Create"
+@using System.ComponentModel.DataAnnotations
+@using Galerie.Application.Albums.Commands
+@using MediatR
+
+@inject ISender Sender
+
+<h3>Create Album</h3>
+
+<EditForm FormName="CreateAlbumForm" Model="@album" method="post" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator/>
+
+    <InputText @bind-Value="@album.Title" Label="Title" Required/>
+    <InputText @bind-Value="@album.Description" Label="Description"/>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public CreateAlbumModel album { get; set; } = new();
+
+    private async Task HandleValidSubmit()
+    {
+        await Sender.Send(new CreateAlbumCommand(album.Title, album.Description));
+    }
+
+    public class CreateAlbumModel
+    {
+        [Required] [MaxLength(50)] public string Title { get; set; }
+
+        [MaxLength(200)] public string? Description { get; set; }
+    }
+
+}
