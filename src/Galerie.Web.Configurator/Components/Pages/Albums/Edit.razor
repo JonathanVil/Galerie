@@ -1,0 +1,25 @@
+@page "/albums/{albumId:guid}/edit"
+@using Galerie.Application.Albums.Commands
+@using MediatR
+
+@inject ISender Sender
+@inject NavigationManager NavigationManager
+
+<Heading>Edit album</Heading>
+
+
+<form @onsubmit="Delete" @formname="Delete" method="post">
+    <Button Color="Button.ButtonColor.Red">Delete</Button>
+    <AntiforgeryToken/>
+</form>
+
+@code {
+    [Parameter] public Guid AlbumId { get; set; }
+
+    private async Task Delete()
+    {
+        await Sender.Send(new DeleteAlbumCommand(AlbumId));
+        NavigationManager.NavigateTo("/albums");
+    }
+
+}
