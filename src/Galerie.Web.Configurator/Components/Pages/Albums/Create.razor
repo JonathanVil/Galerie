@@ -8,16 +8,18 @@
 
 <h2 class="text-4xl font-extrabold dark:text-white">Create new album</h2>
 
-<EditForm FormName="CreateAlbumForm" Model="@album" method="post" OnValidSubmit="@HandleValidSubmit" class="max-w-md">
-    <DataAnnotationsValidator/>
+<EditForm FormName="CreateAlbumForm" Model="@CreateAlbumCommand" method="post" OnValidSubmit="@HandleValidSubmit" class="max-w-md">
+    <FluentValidationValidator/>
 
     <div class="mb-5">
         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title*</label>
-        <InputText @bind-Value="@album.Title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+        <InputText @bind-Value="@CreateAlbumCommand.Title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+        <ValidationMessage For="() => CreateAlbumCommand.Title" class="mt-2 text-sm text-red-600 dark:text-red-500"/>
     </div>
     <div class="mb-5">
         <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-        <InputText @bind-Value="@album.Description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+        <InputText @bind-Value="@CreateAlbumCommand.Description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+        <ValidationMessage For="() => CreateAlbumCommand.Description" class="mt-2 text-sm text-red-600 dark:text-red-500"/>
     </div>
 
     <Button>Submit</Button>
@@ -25,19 +27,12 @@
 
 @code {
 
-    [SupplyParameterFromForm] public CreateAlbumModel album { get; set; } = new();
+    [SupplyParameterFromForm] public CreateAlbumCommand CreateAlbumCommand { get; set; } = new();
 
     private async Task HandleValidSubmit()
     {
-        await Sender.Send(new CreateAlbumCommand(album.Title, album.Description));
+        await Sender.Send(CreateAlbumCommand);
         NavigationManager.NavigateTo("/Albums");
     }
-
-    public class CreateAlbumModel
-    {
-        [Required] [MaxLength(50)] public string Title { get; set; }
-
-        [MaxLength(200)] public string? Description { get; set; }
-    }
-
+    
 }

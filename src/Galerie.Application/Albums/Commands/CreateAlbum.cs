@@ -4,7 +4,11 @@ using Galerie.Core.Entities;
 
 namespace Galerie.Application.Albums.Commands;
 
-public record CreateAlbumCommand(string Title, string? Description) : IRequest<Guid>;
+public class CreateAlbumCommand : IRequest<Guid>
+{
+    public string Title { get; set; } = null!;
+    public string? Description { get; set; }
+}
 
 public class CreateAlbumCommandValidator : AbstractValidator<CreateAlbumCommand>
 {
