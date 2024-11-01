@@ -4,6 +4,7 @@ using Galerie.Infrastructure.Data;
 using Galerie.Infrastructure.Identity;
 using Galerie.Web.Configurator.Components.Account;
 using Galerie.Web.Configurator.Services;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 
 namespace Galerie.Web.Configurator;
@@ -17,13 +18,21 @@ public static class DependencyInjection
                 o.DefaultScheme = IdentityConstants.ApplicationScheme;
                 o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
-            .AddGoogle(options =>
-            {
-                var googleAuthNSection = config.GetSection("Authentication:Google");
-                options.ClientId = googleAuthNSection["ClientId"] ?? throw new InvalidOperationException("Google auth configuration is invalid");
-                options.ClientSecret = googleAuthNSection["ClientSecret"] ?? throw new InvalidOperationException("Google auth configuration is invalid");
-            })
             .AddIdentityCookies();
+
+        if (config.GetSection("Authentication:Google").GetChildren().Any())
+        {
+            // get the google options
+            var googleOptions = new GoogleOptions();
+            config.GetSection("Authentication:Google").Bind(googleOptions);
+            
+            services.AddAuthentication()
+                .AddGoogle(options => 
+                {
+                    options.ClientId = googleOptions.ClientId;
+                    options.ClientSecret = googleOptions.ClientSecret;
+                });
+        }
         
         services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<ApplicationRole>()
