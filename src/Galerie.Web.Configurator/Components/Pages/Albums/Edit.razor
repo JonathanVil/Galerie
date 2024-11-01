@@ -5,11 +5,10 @@
 @inject ISender Sender
 @inject NavigationManager NavigationManager
 
-<Heading>Edit album</Heading>
-
+<FlowHeading>Edit album</FlowHeading>
 
 <form @onsubmit="Delete" @formname="Delete" method="post">
-    <Button Color="Button.ButtonColor.Red">Delete</Button>
+    <FlowButton Color="FlowButton.ButtonColor.Red">Delete</FlowButton>
     <AntiforgeryToken/>
 </form>
 
