@@ -1,6 +1,11 @@
+using Ardalis.GuardClauses;
+using Galerie.Application.Common.Exceptions;
+using Galerie.Application.Common.Interfaces;
+using Galerie.Core.Entities;
+
 namespace Galerie.Application.Albums.Commands;
 
-public record AddPhotoToAlbumCommand(Guid AlbumId, string Title, string Description, string ImageBase64) : IRequest;
+public record AddPhotoToAlbumCommand(Guid AlbumId, Guid PhotoId) : IRequest;
 
 public class AddPhotoToAlbumCommandValidator : AbstractValidator<AddPhotoToAlbumCommand>
 {
@@ -8,20 +13,40 @@ public class AddPhotoToAlbumCommandValidator : AbstractValidator<AddPhotoToAlbum
     {
         RuleFor(v => v.AlbumId)
             .NotEmpty();
-        RuleFor(v => v.Title)
-            .MaximumLength(200)
-            .NotEmpty();
-        RuleFor(v => v.Description)
-            .MaximumLength(1000);
-        RuleFor(v => v.ImageBase64)
+        RuleFor(v => v.PhotoId)
             .NotEmpty();
     }
 }
 
 public class AddPhotoToAlbumCommandHandler : IRequestHandler<AddPhotoToAlbumCommand>
 {
-    public Task Handle(AddPhotoToAlbumCommand request, CancellationToken cancellationToken)
+    private readonly IApplicationDbContext _context;
+    private readonly Guid _userId;
+
+    public AddPhotoToAlbumCommandHandler(IApplicationDbContext context, IUser user)
     {
-        throw new NotImplementedException();
+        _context = context;
+        _userId = Guard.Against.NullOrEmpty(user.Id);
+    }
+    
+    public async Task Handle(AddPhotoToAlbumCommand request, CancellationToken cancellationToken)
+    {
+        var album = await _context.Albums.FindAsync(request.AlbumId, cancellationToken);
+        Guard.Against.Null(album, nameof(album));
+        if (album.UserId != _userId)
+        {
+            throw new ForbiddenAccessException();
+        }
+        
+        var photo = await _context.Photos.FindAsync(request.PhotoId, cancellationToken);
+        Guard.Against.Null(photo, nameof(photo));
+        if (photo.UserId != _userId)
+        {
+            throw new ForbiddenAccessException();
+        }
+        
+        album.Photos.Add(photo);
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }
