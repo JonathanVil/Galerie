@@ -20,7 +20,7 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration, useSqlite: true);
 builder.Services.AddWebServices(builder.Configuration);
 
 var app = builder.Build();
@@ -28,7 +28,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await app.InitializeDatabaseAsync();
+    await app.InitializeDatabaseAsync(useMigrations: false);
 }
 else
 {

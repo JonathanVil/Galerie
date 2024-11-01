@@ -10,13 +10,13 @@ namespace Galerie.Infrastructure.Data;
 
 public static class InitializerExtensions
 {
-    public static async Task InitializeDatabaseAsync(this WebApplication app)
+    public static async Task InitializeDatabaseAsync(this WebApplication app, bool useMigrations = true)
     {
         using var scope = app.Services.CreateScope();
 
         var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
 
-        await initializer.InitializeAsync();
+        await initializer.InitializeAsync(useMigrations);
 
         await initializer.SeedAsync();
     }
@@ -37,11 +37,18 @@ public class ApplicationDbContextInitializer
         _roleManager = roleManager;
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(bool useMigrations = true)
     {
         try
         {
-            await _context.Database.MigrateAsync();
+            if (useMigrations)
+            {
+                await _context.Database.MigrateAsync();
+            }
+            else
+            {
+                await _context.Database.EnsureCreatedAsync();
+            }
         }
         catch (Exception ex)
         {
