@@ -1,9 +1,11 @@
 using Ardalis.GuardClauses;
 using Galerie.Application.Common.Interfaces;
+using Galerie.Application.Common.Security;
 using Galerie.Core.Entities;
 
 namespace Galerie.Application.Albums.Commands;
 
+[Authorize]
 public class CreateAlbumCommand : IRequest<Guid>
 {
     public string Title { get; set; } = null!;

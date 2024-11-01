@@ -1,10 +1,11 @@
 using Ardalis.GuardClauses;
 using Galerie.Application.Common.Exceptions;
 using Galerie.Application.Common.Interfaces;
-using Galerie.Core.Entities;
+using Galerie.Application.Common.Security;
 
 namespace Galerie.Application.Albums.Commands;
 
+[Authorize]
 public record AddPhotoToAlbumCommand(Guid AlbumId, Guid PhotoId) : IRequest;
 
 public class AddPhotoToAlbumCommandValidator : AbstractValidator<AddPhotoToAlbumCommand>
