@@ -12,7 +12,7 @@
 
 <PageTitle>Albums</PageTitle>
 
-<h1>Albums</h1>
+<h2 class="text-4xl font-extrabold dark:text-white mb-4">Albums</h2>
 
 @if (_albums == null)
 {
@@ -20,25 +20,32 @@
 }
 else if (_albums.Any())
 {
-    @foreach (var album in _albums)
-    {
-        <p>Title: @album.Title</p>
-        <p>Description: @album.Description</p>
-        <p>Cover URL: @album.CoverUrl</p>
-        <p>Photos #: @album.NumberOfPhotos</p>
-        <p>Created: @album.Created</p>
-        <p>Last modified: @album.LastModified</p>
-    }
+    <div class="grid grid-flow-col gap-4 mb-4">
+        @foreach (var album in _albums)
+        {
+            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <img class="rounded-t-lg" src="/docs/images/blog/image-1.jpg" alt=""/>
+                <div class="p-5">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">@album.Title</h5>
+                    <p class="text-sm text-gray-700 dark:text-gray-400">@album.NumberOfPhotos photos</p>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">@album.Description</p>
+                    <Button Href="@($"albums/{album.Id}")" Class="inline-flex items-center px-3 py-2">
+                        Edit
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </Button>
+                </div>
+            </div>
+        }
+    </div>
 }
 else
 {
     <p>No albums found.</p>
 }
 
-<a href="Albums/Create">
-    <button>Create Album</button>
-</a>
-
+<Button Href="Albums/Create">Create album</Button>
 
 @code {
 
