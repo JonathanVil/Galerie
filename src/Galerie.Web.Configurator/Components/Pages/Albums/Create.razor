@@ -6,7 +6,7 @@
 @inject ISender Sender
 @inject NavigationManager NavigationManager
 
-<h2 class="text-4xl font-extrabold dark:text-white">Create new album</h2>
+<Heading>Create new album</Heading>
 
 <EditForm FormName="CreateAlbumForm" Model="@CreateAlbumCommand" method="post" OnValidSubmit="@HandleValidSubmit" class="max-w-md">
     <FluentValidationValidator/>
