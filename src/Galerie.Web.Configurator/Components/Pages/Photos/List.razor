@@ -1,0 +1,69 @@
+@page "/photos"
+@using Galerie.Application.Albums.Queries.GetAlbum
+@using Galerie.Application.Photos.Commands
+@using Galerie.Application.Photos.Queries.GetUserPhotos
+@using MediatR
+@using Microsoft.AspNetCore.Authorization
+
+@rendermode InteractiveServer
+
+@inject ISender Sender
+
+@attribute [Authorize]
+
+<FlowHeading>My photos</FlowHeading>
+
+<div class="mb-5">
+    @if (Photos == null)
+    {
+        <Spinner/>
+    }
+    else if (Photos.Count != 0)
+    {
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            @foreach (var photo in Photos)
+            {
+                <div>
+                    <img class="h-auto max-w-full rounded-lg" src="@photo.Url" alt="">
+                    <p>@photo.Title</p>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No photos found.</p>
+    }
+</div>
+
+
+<label for="photos_upload" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload multiple files</label>
+<InputFile OnChange="LoadFiles" id="photos_upload" type="file" multiple class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" />
+
+@code {
+
+    private IReadOnlyCollection<PhotoDto>? Photos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPhotos();
+    }
+
+    private async Task GetPhotos()
+    {
+        Photos = await Sender.Send(new GetMyPhotosQuery());
+    }
+    
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        
+        foreach (var file in files)
+        {
+            await Sender.Send(new UploadPhotoCommand(file.OpenReadStream(), file.Name, file.Name));
+        }
+        
+        await GetPhotos();
+    }
+
+}
