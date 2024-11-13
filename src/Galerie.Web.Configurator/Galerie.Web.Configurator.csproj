@@ -22,6 +22,10 @@
       <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.0-rc.2.24474.3" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\media-uploads\" />
+    </ItemGroup>
     
     <Target Name="Tailwind" BeforeTargets="Compile">
         <Exec Command="npx tailwindcss -i wwwroot/css/app.css -o wwwroot/css/app.min.css" />
