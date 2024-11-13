@@ -42,6 +42,9 @@ public static class DependencyInjection
 
         services.AddScoped<ApplicationDbContextInitializer>();
 
+        services.Configure<LocalFileOptions>(configuration.GetSection("LocalFileProvider"));
+        services.AddScoped<IFileProvider, LocalFileProvider>();
+
         return services;
     }
 }
